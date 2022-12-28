@@ -10,10 +10,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @EqualsAndHashCode(of = "login")
 @Document(collection = "users")
+@ToString
 public class UserAccount {
 	@Id
 	String login;
