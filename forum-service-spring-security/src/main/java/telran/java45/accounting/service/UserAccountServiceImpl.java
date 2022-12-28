@@ -85,7 +85,6 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 		userAccount.setPassword(password);
 		userAccount.setPasswordDateChange(LocalDate.now().plusDays(30));
 		repository.save(userAccount);
-
 	}
 
 	@Override
