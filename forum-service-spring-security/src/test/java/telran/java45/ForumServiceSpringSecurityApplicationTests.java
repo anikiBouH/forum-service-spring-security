@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.any;
 
 
-import java.util.List;
 import java.util.Optional;
 
 import telran.java45.accounting.dao.UserAccountRepository;
@@ -47,7 +46,7 @@ class ForumServiceSpringSecurityApplicationTests {
 				.login("JavaFun")
 				.firstName("John")
 				.lastName("Smith")
-				.roles(List.of("USER"))
+				.role("USER")
 				.build();
 		javaFunRegisterDto = UserRegisterDto.builder()
 				.login("JavaFun")
@@ -85,6 +84,7 @@ class ForumServiceSpringSecurityApplicationTests {
 		assertEquals(expected, actual);
 	}
 //	public UserAccountResponseDto editUser(String login, UserUpdateDto userUpdateDto)
+	@Test
 	void editUser() {
 		javaFunUpdateDto = UserUpdateDto.builder()
 				.firstName("Johnnn")
@@ -96,7 +96,9 @@ class ForumServiceSpringSecurityApplicationTests {
 		UserAccountResponseDto actual = userAccountServiceImpl.editUser(login, javaFunUpdateDto);
 		assertEquals(expected, actual);
 	}
+	
 //	public RolesResponseDto changeRolesList(String login, String role, boolean isAddRole)
+	@Test
 	void changeRolesList() {
 		javaFunRolesResponseDto = RolesResponseDto.builder()
 				.login(login)
@@ -108,7 +110,10 @@ class ForumServiceSpringSecurityApplicationTests {
 		assertEquals(expected, actual);
 	}
 //	public void changePassword(String login, String newPassword)
-	
+	@Test
+	void changePassword() {
+		
+	}
 	
 
 }
