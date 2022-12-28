@@ -8,6 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.any;
 
@@ -19,6 +20,8 @@ import telran.java45.accounting.dto.RolesResponseDto;
 import telran.java45.accounting.dto.UserAccountResponseDto;
 import telran.java45.accounting.dto.UserRegisterDto;
 import telran.java45.accounting.dto.UserUpdateDto;
+import telran.java45.accounting.dto.exceptions.UserExistsException;
+import telran.java45.accounting.dto.exceptions.UserNotFoundException;
 import telran.java45.accounting.model.UserAccount;
 import telran.java45.accounting.service.UserAccountServiceImpl;
 
@@ -36,6 +39,7 @@ class ForumServiceSpringSecurityApplicationTests {
 	UserAccount javaFunAccount;
 	UserAccountResponseDto javaFunAccountResponseDto;
 	UserRegisterDto javaFunRegisterDto;
+	UserRegisterDto adminRegisterDto;
 	UserUpdateDto javaFunUpdateDto;
 	RolesResponseDto javaFunRolesResponseDto;
 	@BeforeEach
@@ -54,11 +58,16 @@ class ForumServiceSpringSecurityApplicationTests {
 				.firstName("John")
 				.lastName("Smith")
 				.build();
-		
+		adminRegisterDto = UserRegisterDto.builder()
+				.login("admin")
+				.password("admin")
+				.firstName("")
+				.lastName("")
+				.build();
 		when(repository.existsById(any())).thenReturn(true);
 		when(repository.existsById("JavaFun")).thenReturn(false);
 		
-		when(repository.findById(any())).thenReturn(null);
+		when(repository.findById(any())).thenReturn(Optional.empty());
 		when(repository.findById("JavaFun")).thenReturn(Optional.ofNullable(javaFunAccount));
 	}
 	
@@ -68,13 +77,16 @@ class ForumServiceSpringSecurityApplicationTests {
 		UserAccountResponseDto expected = javaFunAccountResponseDto;
 		UserAccountResponseDto actual = userAccountServiceImpl.addUser(javaFunRegisterDto);
 		assertEquals(expected, actual);
+		assertThrows(UserExistsException.class,()->{userAccountServiceImpl.addUser(adminRegisterDto);});
 	}
+	
 //	public UserAccountResponseDto getUser(String login)
 	@Test
 	void getUser() {
 		UserAccountResponseDto expected = javaFunAccountResponseDto;
 		UserAccountResponseDto actual = userAccountServiceImpl.getUser(login);
 		assertEquals(expected, actual);
+		assertThrows(UserNotFoundException.class,()->{userAccountServiceImpl.getUser("invalidId");});
 	}
 //	public UserAccountResponseDto removeUser(String login)
 	@Test
@@ -82,6 +94,7 @@ class ForumServiceSpringSecurityApplicationTests {
 		UserAccountResponseDto expected = javaFunAccountResponseDto;
 		UserAccountResponseDto actual = userAccountServiceImpl.removeUser(login);
 		assertEquals(expected, actual);
+		assertThrows(UserNotFoundException.class,()->{userAccountServiceImpl.removeUser("invalidId");});
 	}
 //	public UserAccountResponseDto editUser(String login, UserUpdateDto userUpdateDto)
 	@Test
@@ -95,6 +108,7 @@ class ForumServiceSpringSecurityApplicationTests {
 		expected.setLastName(javaFunUpdateDto.getLastName());
 		UserAccountResponseDto actual = userAccountServiceImpl.editUser(login, javaFunUpdateDto);
 		assertEquals(expected, actual);
+		assertThrows(UserNotFoundException.class,()->{userAccountServiceImpl.editUser("invalidId", javaFunUpdateDto);});
 	}
 	
 //	public RolesResponseDto changeRolesList(String login, String role, boolean isAddRole)
@@ -108,11 +122,12 @@ class ForumServiceSpringSecurityApplicationTests {
 		RolesResponseDto expected = javaFunRolesResponseDto;
 		RolesResponseDto actual = userAccountServiceImpl.changeRolesList(login, "ADMINISTRATOR", true);
 		assertEquals(expected, actual);
+		assertThrows(UserNotFoundException.class,()->{userAccountServiceImpl.changeRolesList("invalidId", "ADMINISTRATOR", true);});
 	}
 //	public void changePassword(String login, String newPassword)
 	@Test
 	void changePassword() {
-		
+		assertThrows(UserNotFoundException.class,()->{userAccountServiceImpl.changePassword("invalidId", null);});
 	}
 	
 
