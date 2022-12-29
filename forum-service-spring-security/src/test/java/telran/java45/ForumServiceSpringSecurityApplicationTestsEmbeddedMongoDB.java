@@ -22,7 +22,7 @@ import telran.java45.accounting.service.UserAccountServiceImpl;
 
 @SpringBootTest
 @DirtiesContext
-public class ForumServiceSpringSecurityApplicationTests {
+public class ForumServiceSpringSecurityApplicationTestsEmbeddedMongoDB {
 
     @Autowired
     UserAccountRepository repository;
